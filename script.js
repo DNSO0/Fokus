@@ -8,13 +8,14 @@ const botones =document.querySelectorAll('.app__card-button')
 const inputEnfoqueMusica = document.querySelector('#alternar-musica')
 const botonIniciarPausar = document.querySelector('#start-pause')
 const textoIniciarPausar = document.querySelector('#start-pause ')
+const tiempoEnPantalla = document.querySelector('#timer')
 
 const musica = new Audio('./sonidos/luna-rise-part-one.mp3')
 const sonidoPlay = new Audio('./sonidos/play.wav')
 const sonidoPause = new Audio('./sonidos/pause.mp3')
 const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3')
 
-let tiempoTranscurridoEnSegndos = 5
+let tiempoTranscurridoEnSegndos = 1500
 let idIntervalo = null
 
 musica.loop = true;
@@ -30,22 +31,26 @@ inputEnfoqueMusica.addEventListener('change', ()=>{
 })
 
 botonEnfoque.addEventListener('click', () =>{
+    tiempoTranscurridoEnSegndos = 1500
     cambiarContexto('enfoque')
     botonEnfoque.classList.add('active')
 })
 
 botonCorto.addEventListener('click', () =>{
+    tiempoTranscurridoEnSegndos = 300;
     cambiarContexto('descanso-corto')
     botonCorto.classList.add('active')
 })
 
 botonLargo.addEventListener('click', () =>{
+    tiempoTranscurridoEnSegndos = 900;
     cambiarContexto('descanso-largo')
     botonLargo.classList.add('active')
 })
 
 function cambiarContexto(contexto){
 
+    mostrarTiempo();
     botones.forEach(function(contexto){
         contexto.classList.remove('active')
     })
@@ -87,7 +92,7 @@ const cuentaRegresiva = () => {
     textoIniciarPausar.innerHTML = `<img class="app__card-primary-butto-icon" src="/imagenes/pause.png" alt="">
                         <span>Pausar</span>`
     tiempoTranscurridoEnSegndos -= 1
-    console.log("Temporizador:" + tiempoTranscurridoEnSegndos)
+    mostrarTiempo();
 }
 
 botonIniciarPausar.addEventListener('click', iniciarPausar)
@@ -108,3 +113,10 @@ function reiniciar() {
     textoIniciarPausar.innerHTML = `<img class="app__card-primary-butto-icon" src="/imagenes/play_arrow.png" alt="">
                         <span>Comenzar</span>`
 }
+
+function mostrarTiempo() {
+    const tiempo = new Date(tiempoTranscurridoEnSegndos * 1000);
+    const tiempoFormateado = tiempo.toLocaleTimeString('es-MX', {minute: '2-digit', second: '2-digit'})
+    tiempoEnPantalla.innerHTML = `${tiempoFormateado}`
+}
+mostrarTiempo();
